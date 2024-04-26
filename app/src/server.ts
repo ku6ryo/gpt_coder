@@ -7,6 +7,7 @@ import divideController from './controllers/divideController';
 import downloadController from './controllers/downloadController';
 import helloController from './controllers/helloController';
 import fibonacciController from './controllers/fibonacciController';
+import fetchHtmlController from './controllers/fetchHtmlController';
 
 export const createApp = () => {
   const app = express();
@@ -19,6 +20,7 @@ export const createApp = () => {
   app.get('/download', downloadController);
   app.get('/hello', helloController);
   app.get('/fibonacci', fibonacciController);
+  app.get('/fetch-html', fetchHtmlController);
 
   return app;
 };
