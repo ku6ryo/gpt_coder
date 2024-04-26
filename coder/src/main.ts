@@ -153,6 +153,13 @@ function ask(question: string): Promise<string> {
         const o = file.operation;
         const p = path.join(rootDir, file.path)
         const c = file.code
+        // If the file is out of the root directory, skip it
+        // This is to prevent the user from deleting files outside the root directory
+        // e.g. the path is ../../etc/passwd
+        if (!p.startsWith(rootDir)) {
+            console.error(`File path is out of the root directory: ${p}`);
+            continue;
+        }
         if (o == "delete") {
             // delete the file, if it's a directory, delete the directory
             if (fs.existsSync(p)) {
