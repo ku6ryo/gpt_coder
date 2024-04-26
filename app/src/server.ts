@@ -1,4 +1,4 @@
-import * as express from 'express';
+import express from 'express';
 import sumController from './controllers/sumController';
 import subtractController from './controllers/subtractController';
 import helloController from './controllers/helloController';
