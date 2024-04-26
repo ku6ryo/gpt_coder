@@ -8,6 +8,10 @@ const subtractController = (req: Request, res: Response) => {
   }
   const aNum = parseInt(a, 10);
   const bNum = parseInt(b, 10);
+  if (isNaN(aNum) || isNaN(bNum)) {
+    res.status(400).send('Non-numerical input');
+    return;
+  }
   const difference = aNum - bNum;
   res.send(`Difference: ${difference}`);
 };

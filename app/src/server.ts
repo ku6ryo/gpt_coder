@@ -3,16 +3,23 @@ import sumController from './controllers/sumController';
 import subtractController from './controllers/subtractController';
 import helloController from './controllers/helloController';
 
-export const app = express();
+export const createApp = () => {
+  const app = express();
 
-// Example URL: http://localhost:3000/sum?a=10&b=5
-app.get('/sum', sumController);
+  // Example URL: http://localhost:3000/sum?a=10&b=5
+  app.get('/sum', sumController);
 
-// Example URL: http://localhost:3000/subtract?a=10&b=5
-app.get('/subtract', subtractController);
+  // Example URL: http://localhost:3000/subtract?a=10&b=5
+  app.get('/subtract', subtractController);
 
-// New Hello endpoint
-app.get('/hello', helloController);
+  // New Hello endpoint
+  app.get('/hello', helloController);
 
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
+  return app;
+};
+
+if (require.main === module) {
+  const PORT = process.env.PORT || 3000;
+  const app = createApp();
+  app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
+}
