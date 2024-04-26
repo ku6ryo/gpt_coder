@@ -23,7 +23,7 @@ export const validateVersion = (version: string) => {
 
 const validateStructure = (items: any[]) => {
   return items.every(item => {
-    if (typeof item.transform !== 'object' || typeof item.transform.x !== 'number' || typeof item.transform.y !== 'number' || typeof item.transform.z !== 'number') {
+    if (typeof item.transform !== 'object' || typeof item.rotation !== 'object' || typeof item.transform.x !== 'number' || typeof item.transform.y !== 'number' || typeof item.transform.z !== 'number' || typeof item.rotation.x !== 'number' || typeof item.rotation.y !== 'number' || typeof item.rotation.z !== 'number') {
       return false;
     }
     if (item.assetId && typeof item.assetId !== 'string') {
