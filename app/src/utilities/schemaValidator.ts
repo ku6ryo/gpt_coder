@@ -1,10 +1,11 @@
-const requiredSchemaAttributes = ['version', 'structure'];
+// Validators for the schema
+// The spec is in the SchemaSpec.md file.
 
-const validateSchema = (schema: object) => {
+const validateSchema = (schema: any) => {
   if ("version" in schema === false || "structure" in schema === false) {
     return false;
   }
-  if (typeof schema.version !== 'string' || typeof schema.structure !== 'object') {
+  if (typeof schema.version !== 'string' || !Array.isArray(schema.structure)) {
     return false;
   }
   if (!validateVersion(schema.version)) {
@@ -16,13 +17,22 @@ const validateSchema = (schema: object) => {
   return true;
 };
 
-const validateVersion = (version: string) => {
+export const validateVersion = (version: string) => {
   return /^\d+\.\d+\.\d+$/.test(version);
 };
 
-const validateStructure = (items) => {
+const validateStructure = (items: any[]) => {
   return items.every(item => {
-    if (typeof item.transform !== 'object' || !item.transform.x || !item.transform.y || !item.transform.z) {
+    if (typeof item.transform !== 'object' || typeof item.transform.x !== 'number' || typeof item.transform.y !== 'number' || typeof item.transform.z !== 'number') {
+      return false;
+    }
+    if (item.assetId && typeof item.assetId !== 'string') {
+      return false;
+    }
+    if (item.assetId && item.children) {
+      return false;
+    }
+    if (!item.assetId && !item.children) {
       return false;
     }
     if (item.children && !validateStructure(item.children)) {

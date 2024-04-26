@@ -2,7 +2,6 @@ import express from 'express';
 import { upload, uploadController } from './controllers/uploadController';
 import sumController from './controllers/sumController';
 import subtractController from './controllers/subtractController';
-import helloController from './controllers/helloController';
 import multiplyController from './controllers/multiplyController';
 import divideController from './controllers/divideController';
 import downloadController from './controllers/downloadController';
@@ -12,7 +11,6 @@ export const createApp = () => {
 
   app.get('/sum', sumController);
   app.get('/subtract', subtractController);
-  app.get('/hello', helloController);
   app.get('/multiply', multiplyController);
   app.get('/divide', divideController);
   app.post('/upload', upload.single('image'), uploadController);
