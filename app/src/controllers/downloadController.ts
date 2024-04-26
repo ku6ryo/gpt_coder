@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { createGCSBucket } from '../utilities/gcsUtility';
+import { createGCSBucketFromConfig } from '../utilities/gcsUtility';
 
 /**
  * Downloads a file from a specified path and sends it as a response.
@@ -14,11 +14,7 @@ const downloadController = async (req: Request, res: Response) => {
     res.status(400).send('Invalid file path');
     return;
   }
-  const bucket = createGCSBucket(
-    process.env.GCLOUD_PROJECT_ID,
-    process.env.GCLOUD_CREDENTIALS,
-    process.env.GCLOUD_BUCKET_NAME
-  );
+  const bucket = createGCSBucketFromConfig();
   const file = bucket.file(filePath);
   const downloadStream = file.createReadStream();
 

@@ -7,3 +7,13 @@ export const createGCSBucket = (projectId: string, credentials: string, bucketNa
   });
   return gcStorage.bucket(bucketName);
 };
+
+export const createGCSBucketFromConfig = () => {
+  const projectId = 'your-project-id';
+  const credentials = JSON.stringify({
+    client_email: 'your-client-email',
+    private_key: 'your-private-key'
+  });
+  const bucketName = 'your-default-bucket-name';
+  return createGCSBucket(projectId, credentials, bucketName);
+};
