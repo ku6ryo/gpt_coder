@@ -11,6 +11,13 @@ import { isText } from 'istextorbinary'
 
 const args = parseArgs(process.argv.slice(2));
 
+if (args.h || args.help) {
+    console.log("Usage: coder [options]");
+    console.log("Options:");
+    console.log("  -c <config file>  Specify the config file. Default is coder.config.json");
+    exit(0);
+}
+
 const openaiApiKey = process.env.OPENAI_API_KEY;
 if (!openaiApiKey) {
   throw new Error("OPENAI_API_KEY is required");
