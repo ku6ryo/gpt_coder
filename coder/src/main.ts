@@ -103,8 +103,9 @@ function ask(question: string): Promise<string> {
                     + "\n"
                     + "Please output files you changed."
                     + "\n"
-                    + "The input format is as follows:"
+                    + "The input format is as follows:\n"
                     + "description: About your changes\n"
+                    + "instructions: Instructions which you cannot change. e.g. Hardware configurations, Library install.\n"
                     + "files: List of files you changed\n"
                     + "  path: File path\n"
                     + "  operation: create, update or delete\n"
@@ -129,6 +130,7 @@ function ask(question: string): Promise<string> {
     }
     const outputJson = JSON.parse(output);
     console.log("Description:", outputJson.description);
+    console.log("Instructions:", outputJson.instructions);
     for (const file of outputJson.files) {
         /*
         console.log("File:", file.path);
