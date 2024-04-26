@@ -10,6 +10,7 @@ This project sets up a basic Express.js server.
 - API endpoint at `/multiply` which calculates the product of two numbers provided as query parameters and responds with the result.
 - API endpoint at `/divide` which calculates the quotient of two numbers provided as query parameters and responds with the result if not dividing by zero.
 - API endpoint at `/upload` allowing POST requests to upload an image and respond with its dimensions.
+- API endpoint at `/download` to download a file from Google Cloud Storage using a file path parameter `f`.
 
 ## Setup
 
@@ -26,3 +27,4 @@ Once the server is running, access the available API endpoints:
 - For `multiply`, send a GET request to `http://localhost:3000/multiply?a=10&b=5`
 - For `divide`, send a GET request to `http://localhost:3000/divide?a=10&b=5` avoiding division by zero
 - To `upload` an image, send a POST request to `http://localhost:3000/upload` with an image file included in the request.
+- For `download`, send a GET request to `http://localhost:3000/download?f=path_to_file`

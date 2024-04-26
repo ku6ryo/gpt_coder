@@ -15,6 +15,7 @@ describe('Test /upload endpoint', () => {
     expect(response.body).toHaveProperty('height');
     expect(response.body.width).toBe(400);
     expect(response.body.height).toBe(600);
+    expect(response.body).toHaveProperty('message', 'Upload successful and dimensions extracted.');
   });
 
   test('POST /upload without image', async () => {

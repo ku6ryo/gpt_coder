@@ -5,6 +5,7 @@ import subtractController from './controllers/subtractController';
 import helloController from './controllers/helloController';
 import multiplyController from './controllers/multiplyController';
 import divideController from './controllers/divideController';
+import downloadController from './controllers/downloadController';
 
 export const createApp = () => {
   const app = express();
@@ -15,6 +16,7 @@ export const createApp = () => {
   app.get('/multiply', multiplyController);
   app.get('/divide', divideController);
   app.post('/upload', upload.single('image'), uploadController);
+  app.get('/download', downloadController);
 
   return app;
 };
