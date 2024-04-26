@@ -157,7 +157,9 @@ function ask(question: string): Promise<string> {
         // This is to prevent the user from deleting files outside the root directory
         // e.g. the path is ../../etc/passwd
         if (!p.startsWith(rootDir)) {
-            console.error(`File path is out of the root directory: ${p}`);
+            console.warn(`AI provided the following path: ${file.path}`)
+            console.warn(`This path is out of the root directory: ${rootDir}`)
+            console.warn(`Skipping this file`)
             continue;
         }
         if (o == "delete") {
