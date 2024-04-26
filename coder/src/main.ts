@@ -51,6 +51,7 @@ function ask(question: string): Promise<string> {
 
 ;(async () => {
     const request = await ask("Your request: ");
+    const startTime = Date.now();
     const rootDir = path.dirname(configPath);
     // get all files in the root directory recursively
     const files = [] as string[];
@@ -91,6 +92,7 @@ function ask(question: string): Promise<string> {
 
     const exampleJson = {
         description: "I want to make an API server with express.js. Please add an hellow world API endpoint.",
+        instruction: "A new library is added to the dependencies. Please install it before running the application.",
         files: [
             { 
                 path: "src/server.ts",
@@ -181,4 +183,6 @@ function ask(question: string): Promise<string> {
             fs.writeFileSync(p, c);
         }
     }
+    const endTime = Date.now();
+    console.log("Elapsed time:", (endTime - startTime) / 1000, "s");
 })();
