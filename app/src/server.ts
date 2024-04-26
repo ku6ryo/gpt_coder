@@ -1,10 +1,18 @@
-import express from 'express';
+import * as express from 'express';
+import sumController from './controllers/sumController';
+import subtractController from './controllers/subtractController';
+import helloController from './controllers/helloController';
 
-const app = express();
+export const app = express();
 
-app.get('/hello-world', (req, res) => {
-  res.send('Hello, World!');
-});
+// Example URL: http://localhost:3000/sum?a=10&b=5
+app.get('/sum', sumController);
+
+// Example URL: http://localhost:3000/subtract?a=10&b=5
+app.get('/subtract', subtractController);
+
+// New Hello endpoint
+app.get('/hello', helloController);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));

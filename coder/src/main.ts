@@ -1,9 +1,10 @@
 import { config } from 'dotenv';
 config();
 import { OpenAI } from "openai"
-import fs, { writeFile, writeFileSync } from "fs";
+import fs from "fs";
 import { parseConfig } from './parseConfig';
 import path from 'path';
+import readline from 'readline';
 
 const openaiApiKey = process.env.OPENAI_API_KEY;
 if (!openaiApiKey) {
@@ -15,8 +16,21 @@ if (!configPath) {
   throw new Error("CONFIG_PATH is required");
 }
 
-;(async () => {
+function ask(question: string): Promise<string> {
+    const rl = readline.createInterface({
+        input: process.stdin,
+        output: process.stdout
+    });
+    return new Promise<string>(resolve => {
+        rl.question(question, input => {
+            rl.close()
+            resolve(input)
+        });
+    });
+}
 
+;(async () => {
+    const request = await ask("Your request: ");
     const configStr = fs.readFileSync(configPath, "utf-8");
     const configRaw = JSON.parse(configStr);
     const config = parseConfig(configRaw);
@@ -62,7 +76,12 @@ if (!configPath) {
         files: [
             { 
                 path: "src/server.ts",
+                operation: "create",
                 code: `import express from 'express'`
+            }, {
+                path: "src/controllers.ts",
+                operation: "delete",
+                code: "",
             }
         ]
     }
@@ -78,9 +97,18 @@ if (!configPath) {
             {
                 role: "system",
                 content: "You are a professional coder. You must write code for user's request."
-                    + "The output format must be a patch file that can be applied to the current codebase."
+                    + "The output format must be the file path and the code that can be applied to the current codebase."
+                    + "Please make sure that the application works."
+                    + "Please do not ouptput partial code but full code for a file."
                     + "\n"
                     + "Please output files you changed."
+                    + "\n"
+                    + "The input format is as follows:"
+                    + "description: About your changes\n"
+                    + "files: List of files you changed\n"
+                    + "  path: File path\n"
+                    + "  operation: create, update or delete\n"
+                    + "  code: Code to be added or updated\n"
                     + "\n"
                     + "Example: "
                     + JSON.stringify(exampleJson)
@@ -90,28 +118,42 @@ if (!configPath) {
             },
             {
                 role: "user",
-                content: "Add readme of the project."
+                content: request,
             }
         ],
     });
     const output = response.choices[0].message.content;
+    console.log("Token used:", response.usage?.total_tokens)
     if (!output) {
         throw new Error("No output");
     }
     const outputJson = JSON.parse(output);
     console.log("Description:", outputJson.description);
     for (const file of outputJson.files) {
+        /*
         console.log("File:", file.path);
         console.log("Code:", file.code);
+        */
+        const o = file.operation;
         const p = path.join(rootDir, file.path)
         const c = file.code
-        // write the code to the file. if directory does not exist, create it
-        const dir = path.dirname(p);
-        if (!fs.existsSync(dir)) {
-            fs.mkdirSync(dir, {
-                recursive: true
-            });
+        if (o == "delete") {
+            // delete the file, if it's a directory, delete the directory
+            if (fs.existsSync(p)) {
+                if (fs.lstatSync(p).isDirectory()) {
+                    fs.rmdirSync(p, { recursive: true });
+                } else {
+                    fs.unlinkSync(p);
+                }
+            }
+        } else {
+            const dir = path.dirname(p);
+            if (!fs.existsSync(dir)) {
+                fs.mkdirSync(dir, {
+                    recursive: true
+                });
+            }
+            fs.writeFileSync(p, c);
         }
-        fs.writeFileSync(p, c);
     }
 })();
