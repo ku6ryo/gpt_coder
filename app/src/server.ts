@@ -6,6 +6,7 @@ import multiplyController from './controllers/multiplyController';
 import divideController from './controllers/divideController';
 import downloadController from './controllers/downloadController';
 import helloController from './controllers/helloController';
+import fibonacciController from './controllers/fibonacciController';
 
 export const createApp = () => {
   const app = express();
@@ -17,6 +18,7 @@ export const createApp = () => {
   app.post('/upload', upload.single('image'), uploadController);
   app.get('/download', downloadController);
   app.get('/hello', helloController);
+  app.get('/fibonacci', fibonacciController);
 
   return app;
 };
