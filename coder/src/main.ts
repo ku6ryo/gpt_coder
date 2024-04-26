@@ -4,7 +4,6 @@ import { parseConfig } from './parseConfig';
 import path from 'path';
 import parseArgs from 'minimist';
 import { exit } from 'process';
-import { isText } from 'istextorbinary'
 import { loadGlobalConfig } from './loadGlobalConfig';
 import { ask } from './ask';
 import { getTargetFiles } from "./getTargetFiles";
