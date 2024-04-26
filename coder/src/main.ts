@@ -1,20 +1,33 @@
-import { config } from 'dotenv';
-config();
+import { config as dotenv } from 'dotenv';
+dotenv();
 import { OpenAI } from "openai"
 import fs from "fs";
 import { parseConfig } from './parseConfig';
 import path from 'path';
 import readline from 'readline';
+import parseArgs from 'minimist';
+import { exit } from 'process';
+import { isText } from 'istextorbinary'
+
+const args = parseArgs(process.argv.slice(2));
 
 const openaiApiKey = process.env.OPENAI_API_KEY;
 if (!openaiApiKey) {
   throw new Error("OPENAI_API_KEY is required");
 }
 
-const configPath = process.env.CONFIG_PATH;
-if (!configPath) {
-  throw new Error("CONFIG_PATH is required");
-}
+const configPath = args.c || "./coder.config.json";
+const config = (() => {
+    try {
+        const configStr = fs.readFileSync(configPath, "utf-8");
+        const configRaw = JSON.parse(configStr);
+        const config = parseConfig(configRaw);
+        return config
+    } catch (e) {
+        console.error(`Failed to parse config file: ${configPath}`);
+        exit(1);
+    }
+})()
 
 function ask(question: string): Promise<string> {
     const rl = readline.createInterface({
@@ -31,11 +44,6 @@ function ask(question: string): Promise<string> {
 
 ;(async () => {
     const request = await ask("Your request: ");
-    const configStr = fs.readFileSync(configPath, "utf-8");
-    const configRaw = JSON.parse(configStr);
-    const config = parseConfig(configRaw);
-    console.log(config)
-
     const rootDir = path.dirname(configPath);
     // get all files in the root directory recursively
     const files = [] as string[];
@@ -47,6 +55,9 @@ function ask(question: string): Promise<string> {
             } else {
                 const file = path.join(dir, entry.name);
                 if (file == configPath) {
+                    continue;
+                }
+                if (!isText(file)) {
                     continue;
                 }
                 // if file is in the config.exclude, skip it
@@ -64,7 +75,7 @@ function ask(question: string): Promise<string> {
 
     let fileContents = "";
     for (const file of files) {
-        const content = fs.readFileSync(file, "utf-8");
+        const content = fs.readFileSync(file);
         const relativePath = path.relative(rootDir, file);
         fileContents += `===== ${relativePath} START =====\n`
         fileContents += content;
@@ -130,12 +141,8 @@ function ask(question: string): Promise<string> {
     }
     const outputJson = JSON.parse(output);
     console.log("Description:", outputJson.description);
-    console.log("Instructions:", outputJson.instructions);
+    console.log("Instructions:", outputJson.instructions || "No instructions");
     for (const file of outputJson.files) {
-        /*
-        console.log("File:", file.path);
-        console.log("Code:", file.code);
-        */
         const o = file.operation;
         const p = path.join(rootDir, file.path)
         const c = file.code
