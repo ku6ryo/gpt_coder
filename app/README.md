@@ -8,6 +8,7 @@ This project sets up a basic Express.js server.
 - API endpoint at `/sum` which calculates the sum of two numbers provided as query parameters and responds with the result.
 - API endpoint at `/subtract` which calculates the difference between two numbers provided as query parameters and responds with the result.
 - API endpoint at `/multiply` which calculates the product of two numbers provided as query parameters and responds with the result.
+- API endpoint at `/divide` which calculates the quotient of two numbers provided as query parameters and responds with the result if not dividing by zero.
 - API endpoint at `/upload` allowing POST requests to upload an image and respond with its dimensions.
 
 ## Setup
@@ -23,4 +24,5 @@ Once the server is running, access the available API endpoints:
 - For `sum`, send a GET request to `http://localhost:3000/sum?a=10&b=5`
 - For `subtract`, send a GET request to `http://localhost:3000/subtract?a=10&b=5`
 - For `multiply`, send a GET request to `http://localhost:3000/multiply?a=10&b=5`
+- For `divide`, send a GET request to `http://localhost:3000/divide?a=10&b=5` avoiding division by zero
 - To `upload` an image, send a POST request to `http://localhost:3000/upload` with an image file included in the request.
